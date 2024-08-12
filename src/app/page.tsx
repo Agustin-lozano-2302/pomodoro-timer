@@ -15,8 +15,9 @@ export default function Home() {
   });
   const [isStart, setIsStart] = useState(false);
   const [isBreak, setIsBreak] = useState(false);
-  const [step, setStep] = useState(0); // 0: Initial, 1: Work, 2: Short Break, 3: Long Break
-  const [cycleCount, setCycleCount] = useState(0); // Counts completed work-break cycles
+  const [resetAnimation, setResetAnimation] = useState(false);
+  const [step, setStep] = useState(0);
+  const [cycleCount, setCycleCount] = useState(0);
 
   const start = () => {
     console.log("Starting pomodoro...");
@@ -30,8 +31,21 @@ export default function Home() {
     }
   };
 
+  const reset = () => {
+    setResetAnimation(true)
+    setTimeout(() => {
+      setResetAnimation(false)
+      setIsStart(false)
+      setStep(0);
+      setCycleCount(0)
+      setPomo({
+        seconds: 0,
+        minutes: 25,
+      });
+    }, 1000)
+  }
+
   const stop = () => {
-    console.log("Stopping pomodoro...");
     setIsStart(false);
   };
 
@@ -87,8 +101,13 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [isStart, step, cycleCount]);
 
+
+
+
   return (
-    <main className="flex min-h-screen flex-col items-center px-6">
+    <main className={` flex min-h-screen flex-col items-center px-6 animate-fade animate-duration-[2000ms] relative z-[100]`}>
+      <div className={` ${resetAnimation ? "animate-fade animate-once animate-duration-[700ms] w-full h-full bg-red-600 z-[200] fixed" : "d-none"}`}>
+      </div>
       <nav className={` flex py-8 items-center gap-4 mx-auto`}>
         <Image
           src="/logos/pomo-logo-03.jpeg"
@@ -97,35 +116,35 @@ export default function Home() {
           height={80}
           className="rounded-full"
         />
-        <p className="text-[3rem] font-bold">Pomodoro</p>
+        <p className="text-2xl md:text-5xl font-bold">Pomodoro</p>
       </nav>
       <section
-        className={`w-fit p-20 flex flex-col border-[1px] border-red-600 rounded-xl`}
+        className={`w-fit p-4 flex flex-col gap-8  rounded-xl`}
       >
         <div
           id="states"
-          className={`flex justify-center item-center w-full gap-8 text-lg mb-8`}
+          className={`flex  justify-evenly item-center w-full gap-2 md:gap-8 text-lg`}
         >
           <State
-            text="Pomodoro"
+            text="Focus"
             customStyling={step === 1 ? "bg-green-600 border-white" : ""}
           />
           <State
-            text="Descanso corto"
+            text="Short break"
             customStyling={step === 2 ? "bg-green-600 border-white" : ""}
           />
           <State
-            text="Descanso largo"
+            text="Long break"
             customStyling={step === 3 ? "bg-green-600 border-white" : ""}
           />
         </div>
         <p className="text-8xl text-center">{timeDisplay()}</p>
         <div
           id="timer-display"
-          className={`flex justify-center item-center w-full gap-8 p-8 relative`}
+          className={`flex justify-center item-center w-full gap-8 relative`}
         >
           {isStart &&
-            <div className="absolute flex gap-2 top-[25px]">
+            <div className="absolute flex gap-2 top-[0px]">
               <span style={{
                 rotate: "-20deg"
               }} className="animate-fade-up animate-infinite animate-duration-[2000ms] w-[4px] h-[20px] bg-green-600 "></span>
@@ -136,117 +155,17 @@ export default function Home() {
             </div>
           }
           <button onClick={isStart ? stop : start} className="button bg-red-600 font-bold text-xl w-[100px] h-[100px] rounded-full">
-            {isStart ? "Pausar" : minutes === 25 ? "Empezar" : "Reanudar"}
+            {isStart ? "Pause" : minutes === 25 ? "Start" : "Continue"}
           </button>
         </div>
+        {step !== 0 &&
+          <button onClick={reset} className="button m-auto font-bold text-xl w-[100px] h-[100px] rounded-full">
+            Reset
+          </button>
+        }
       </section>
+
     </main>
   );
 }
 
-// "use client"
-// import Image from "next/image";
-// import { useEffect, useState } from "react";
-
-// export default function Home() {
-
-//   const [minutes, setMinutes] = useState<number>(25)
-//   const [seconds, setSeconds] = useState<number>(0)
-//   const [displayMessage, setDisplayMessage] = useState<boolean>(false)
-//   const [stop, setStop] = useState<boolean>(false)
-//   const [start, setStart] = useState<boolean>(false)
-
-
-
-//   const formatedSeconds = seconds < 10 ? "0" + seconds : seconds
-//   const formatedMinutes = minutes < 10 ? "0" + minutes : minutes
-
-
-
-//   const interval = () => {
-//     setStart(true)
-//   }
-
-//   const pause = () => {
-//     if (!stop) {
-//       setDisplayMessage(false)
-//       setMinutes(minutes)
-//       setSeconds(seconds)
-//       setStop(true)
-//       setStart(false)
-//     } else {
-//       setStop(false)
-//       setStart(true)
-//     }
-//   }
-
-
-//   useEffect(() => {
-//     if (start) {
-//       if (stop) {
-//         setDisplayMessage(false)
-//         setStop(false)
-//         setStart(false)
-//         setMinutes(25)
-//         setSeconds(0)
-//       }
-
-//       let interval = setInterval(() => { 
-//         clearInterval(interval)
-
-//         if (seconds === 0) {
-//           if (minutes !== 0) {
-//             setSeconds(59);
-//             setMinutes(minutes - 1)
-
-//           } else {
-//             let minutes = displayMessage ? 24 : 4;
-//             let seconds = 59;
-//             setSeconds(seconds)
-//             setMinutes(minutes)
-//             setDisplayMessage(!displayMessage)
-//           }
-//         } else {
-//           if (minutes !== 0) {
-//             setSeconds(59);
-//             setMinutes(minutes - 1)
-
-//           } else {
-//             return
-
-//           }
-//         }
-
-//       }, 1000)
-//     }
-
-
-//   }, [start, seconds])
-
-
-
-
-//   return (
-//     <main className="flex min-h-screen flex-col items-center px-6">
-//       <nav
-//         className={` w-full flex py-7  items-center gap-4`}
-//       >
-//         <Image src="/logos/pomo-logo-03.jpeg" alt="logo" width={80} height={80} className=" rounded-full" />
-//         <p className="text-[3rem] font-bold">Pomodoro</p>
-//       </nav>
-//       <section className={`  w-full flex flex-col`}>
-//         <div id="states" className={` flex justify-center item-center w-full gap-8 text-lg`}>
-//           <p className=" max-w-max text-center">{stop || start ? "Concentrate!" : "Presiona iniciar para comenzar"}</p>
-//           {/* <p className=" w-1/4 h-min text-center">Descanso corto</p>
-//           <p className=" w-1/4 h-min text-center">Descanso largo</p> */}
-//         </div>
-//         <p className=" text-8xl text-center">{formatedMinutes + ":" + formatedSeconds}</p>
-//         <div id="timer-display" className={` flex justify-center item-center w-full gap-8 p-8`}>
-//           {displayMessage && <p className="text-3xl">Break!</p>}
-//           <button onClick={interval} className="button">{!stop ? "Iniciar" : "Reiniciar"}</button>
-//           <button onClick={pause} className="button">{stop ? "Reanudar" : "Pausar"}</button>
-//         </div>
-//       </section>
-//     </main>
-//   );
-// }
