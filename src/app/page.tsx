@@ -57,6 +57,25 @@ export default function Home() {
     );
   };
 
+  const forceState = (x: number) => {
+    if (x === 1) {
+      setStep(x)
+      setPomo({
+        seconds: 0,
+        minutes: 25,
+      });
+      setIsStart(false)
+    } else if (x === 2) {
+      setStep(x);
+      setPomo({ minutes: 5, seconds: 0 });
+    }
+    else {
+      setStep(x);
+      setPomo({ minutes: 15, seconds: 0 });
+    }
+    setIsStart(false)
+  }
+
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
 
@@ -127,13 +146,16 @@ export default function Home() {
         >
           <State
             text="Focus"
+            onClick={() => forceState(1)}
             customStyling={step === 1 ? "bg-green-600 border-white" : ""}
           />
           <State
+            onClick={() => forceState(2)}
             text="Short break"
             customStyling={step === 2 ? "bg-green-600 border-white" : ""}
           />
           <State
+            onClick={() => forceState(3)}
             text="Long break"
             customStyling={step === 3 ? "bg-green-600 border-white" : ""}
           />
