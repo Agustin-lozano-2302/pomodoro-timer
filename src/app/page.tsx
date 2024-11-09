@@ -3,6 +3,7 @@ import { StateButtons } from "app/components/sections/statesButtons";
 import State from "app/components/state";
 import { Timer } from "app/components/Timer";
 import { usePomodoro } from "app/hooks/usePomodoro";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -34,7 +35,11 @@ const {
   return (
     <main className="flex min-h-screen flex-col items-center px-6 bg-gray-800  text-gray-100 relative gap-8">
     <nav className="flex py-8 items-center gap-4 mx-auto">
-      <p className="text-2xl md:text-5xl font-bold">PomoProto</p>
+      <div className="flex flex-col">
+      <p className="text-2xl md:text-5xl font-normal">Proto</p>
+    <p className="text-2xl md:text-5xl font-bold">Pomo</p>
+    </div>
+      <Image src={"/logos/pomodoro.png"} alt="logo" width={100} height={100} />
     </nav>
       <div className="flex flex-col justify-center items-center gap-10">
         <Timer minutes={minutes} seconds={seconds} isBreak={isBreak} step={step} progress={progress} />

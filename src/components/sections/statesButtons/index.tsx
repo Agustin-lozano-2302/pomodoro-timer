@@ -9,7 +9,7 @@ interface StateButtonsProps {
 
 export function StateButtons({ step, isStart, forceState }: StateButtonsProps) {
   return (
-    <div id="states" className="flex justify-evenly items-center gap-4 text-lg">
+    <div id="states" className="flex justify-evenly items-center gap-4 text-lg border-[1px] border-green-500  rounded-full">
       <State
         text="Focus"
         onClick={() => forceState(1)}
